@@ -7,12 +7,15 @@ import googlemaps
 
 API_KEY = "AIzaSyDc_6DfkpFdeQJX-KK7t_2k26aOdi-4aqU"
 
+
 def main():
     gmaps = googlemaps.Client(key=API_KEY)
 
     out_f = open("jails.csv", "w", encoding="utf-8")
 
-    csv_writer = csv.DictWriter(out_f, fieldnames=["name", "website", "formatted_address"])
+    csv_writer = csv.DictWriter(
+        out_f, fieldnames=["name", "website", "formatted_address"]
+    )
     csv_writer.writeheader()
 
     in_f = open("counties.txt", "r")
@@ -36,7 +39,7 @@ def main():
         row = {
             "name": result.get("name"),
             "website": result.get("website"),
-            "formatted_address": result.get("formatted_address")
+            "formatted_address": result.get("formatted_address"),
         }
 
         pprint(row)
@@ -65,7 +68,7 @@ def main():
         row = {
             "name": result.get("name"),
             "website": result.get("website"),
-            "formatted_address": result.get("formatted_address")
+            "formatted_address": result.get("formatted_address"),
         }
 
         pprint(row)
@@ -73,6 +76,6 @@ def main():
 
     out_f.close()
 
+
 if __name__ == "__main__":
     main()
-
