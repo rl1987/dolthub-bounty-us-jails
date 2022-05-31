@@ -137,3 +137,4 @@ dmypy.json
 *.plan
 
 *.csv
+*.txt
