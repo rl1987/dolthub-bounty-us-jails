@@ -8,6 +8,7 @@ import requests
 import pandas as pd
 from lxml import html
 
+
 def scrape_snapshot(url):
     print(url)
 
@@ -25,72 +26,91 @@ def scrape_snapshot(url):
     else:
         df = dfs[1]
     df = df[:-2]
-    df.set_index('Institution', inplace=True)
-    df.drop(columns=['Capacity', 'Medical/Segregation'], inplace=True)
+    df.set_index("Institution", inplace=True)
+    df.drop(columns=["Capacity", "Medical/Segregation"], inplace=True)
 
     print(df)
 
     rows = []
 
-    rows.append({
-        'id': "IA_ANAMOSA",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Anamosa']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_ANAMOSA",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Anamosa"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
-    rows.append({
-        'id': "IA_CLARINDA",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Clarinda']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_CLARINDA",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Clarinda"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
-    rows.append({
-        'id': "IA_FORTDODGE",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Fort Dodge']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_FORTDODGE",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Fort Dodge"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
-    rows.append({
-        'id': "IA_MTPLEASANT",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Mount Pleasant']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_MTPLEASANT",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Mount Pleasant"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
-    rows.append({
-        'id': "IA_NEWTON",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Newton-Medium']['Current Count'].replace(",", "")) + int(df.loc['Minimum']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_NEWTON",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Newton-Medium"]["Current Count"].replace(",", ""))
+            + int(df.loc["Minimum"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
-    rows.append({
-        'id': "IA_ROCKWELL",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Rockwell City']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_ROCKWELL",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Rockwell City"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
-    rows.append({
-        'id': "IA_STATE",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Fort Madison']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_STATE",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Fort Madison"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
-    rows.append({
-        'id': "IA_WOMEN",
-        'snapshot_date': snapshot_date,
-        'total': int(df.loc['Mitchellville']['Current Count'].replace(",", "")) + int(df.loc['Minimum Live-Out']['Current Count'].replace(",", "")),
-        'source_url': url
-    })
+    rows.append(
+        {
+            "id": "IA_WOMEN",
+            "snapshot_date": snapshot_date,
+            "total": int(df.loc["Mitchellville"]["Current Count"].replace(",", ""))
+            + int(df.loc["Minimum Live-Out"]["Current Count"].replace(",", "")),
+            "source_url": url,
+        }
+    )
 
     pprint(rows)
 
     return rows
+
 
 def try_scraping_at_month(year, month):
     print(year, month)
@@ -101,7 +121,7 @@ def try_scraping_at_month(year, month):
 
     params = {
         "url": "https://doc.iowa.gov/daily-statistics",
-        "timestamp": request_timestamp + "15", # HACK
+        "timestamp": request_timestamp + "15",  # HACK
     }
 
     resp = requests.get(url, params=params)
@@ -122,16 +142,21 @@ def try_scraping_at_month(year, month):
 
     return scrape_snapshot(url)
 
+
 def main():
     out_f = open("inmate_population_snapshots.csv", "w", encoding="utf-8")
 
-    csv_writer = csv.DictWriter(out_f, fieldnames=["id", "snapshot_date", "total", "source_url"], lineterminator="\n")
+    csv_writer = csv.DictWriter(
+        out_f,
+        fieldnames=["id", "snapshot_date", "total", "source_url"],
+        lineterminator="\n",
+    )
     csv_writer.writeheader()
 
     for year in range(2017, 2023):
         for month in range(1, 13):
             rows = try_scraping_at_month(year, month)
-            
+
             if rows is None:
                 continue
 
@@ -143,4 +168,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
