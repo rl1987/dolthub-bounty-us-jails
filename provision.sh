@@ -3,7 +3,7 @@
 set -x
 
 apt-get update
-apt-get install -y python3 python3-pip tmux git vim visidata
+apt-get install -y python3 python3-pip tmux git vim visidata default-jre
 curl -L https://github.com/dolthub/dolt/releases/latest/download/install.sh > /tmp/install.sh && bash /tmp/install.sh
 dolt config --global --add user.email rimantas@keyspace.lt
 dolt config --global --add user.name "rl1987"
@@ -33,4 +33,6 @@ popd
 pushd /bin
 ln -s /root/go/bin/calc_payments calc_payments
 popd
+
+apt-get install -y python3-pdfminer
 
